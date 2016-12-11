@@ -1,0 +1,2 @@
+webpackJsonp([0,3],[function(e,t,n){"use strict";function d(e){return e&&e.__esModule?e:{default:e}}var l=n(1),a=d(l),u=n(28),r=d(u);r.default.render(a.default.createElement("div",null,"Hello world and diego garcia"),document.getElementById("app"))}]);
+//# sourceMappingURL=app.5f92f672fa9020c3cbe5.js.map
