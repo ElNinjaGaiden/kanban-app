@@ -1,44 +1,52 @@
 import React from 'react';
 import uuid from 'uuid';
 import Notes from './Notes';
+import connect from '../libs/connect';
+import NoteActions from '../actions/NoteActions';
 
-
-export default class App extends React.Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      notes: [
-        {
-          id: uuid.v4(),
-          task: 'Learn React'
-        },
-        {
-          id: uuid.v4(),
-          task: 'Do laundry'
-        }
-      ]
-    };
-  }
+class App extends React.Component {
 
   render() {
-    const {notes} = this.state;
+    const {notes, myProp} = this.props;
 
     return (
       <div>
-        <button onClick={this.addNote}>+</button>
-        <Notes notes={notes} />
+        <div>{myProp}</div>
+        <button className="add-note" onClick={this.addNote}>+</button>
+        <Notes notes={notes} 
+          onNoteClick={this.activateNoteEdit} 
+          onDelete={this.deleteNote} 
+          onEdit={this.editNote} />
       </div>
     );
   }
 
   addNote = () => {
-	this.setState({
-      notes: this.state.notes.concat([{
-        id: uuid.v4(),
-        task: 'New task'
-      }])
+    this.props.NoteActions.create({
+      id: uuid.v4(),
+      task: 'New task'
     });
   }
+
+  activateNoteEdit = (id, e) => {
+    this.props.NoteActions.update({id, editing: true});
+  }
+
+  editNote = (id, task) => {
+    const {NoteActions} = this.props;
+    NoteActions.update({id, task, editing: false});
+  }
+
+  deleteNote = (id, e) => {
+    e.stopPropagation();
+    this.props.NoteActions.delete(id);
+  }
 }
+
+
+export default connect(({notes, dummy}) => ({
+  notes, 
+  myProp: dummy.prop1
+}), {
+  NoteActions
+})(App)
